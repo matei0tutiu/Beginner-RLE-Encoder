@@ -10,8 +10,6 @@
 
 template <typename T>
 class BufferBase {
-
-
 public:
     // Constructor
     explicit BufferBase(size_t size);
@@ -34,47 +32,46 @@ public:
     const T& operator[](size_t index) const;
 
     // Public Getters
-    size_t Size() const;
-    bool IsAllocated() const;
+    [[nodiscard]] size_t Size() const;
 
     // Equality Operator
     bool operator==(const BufferBase& other) const;
 
     // Streaming operator
-
-    friend std::ostream& operator<<(std::ostream& os, const BufferBase& buffer)
-    {
-        os << "Buffer<";
-
-        if (buffer._size != 0)
-            for (size_t i = 0; i < buffer._size; i++)
-                os << buffer._data[i] << ' ';
-
-        os << ">[size=" << buffer._size << ']';
-
-        return os;
-    }
-
+    friend std::ostream& operator<<(std::ostream& os, const BufferBase& buffer);
 protected:
     T* _data;
     size_t _size;
 
 };
 
+// Forward declaration
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const BufferBase<T>& buffer);
+
 template <typename T>
 class Buffer : public BufferBase<T> {
     using BufferBase<T>::BufferBase;
 };
 
+// Specialization
+
+std::ostream& operator<<(std::ostream& os, const Buffer<char>& buffer);
+
 template <>
 class Buffer<char> : public BufferBase<char> {
-    using BufferBase<char>::BufferBase;
+    using BufferBase::BufferBase;
 public:
     explicit Buffer(const char* string);
 
-    void ToArray(char* out) const;
 
+    void ToArray(char* out, size_t outSize) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Buffer& buffer);
 };
+
+
+
 
 #include "Buffer.inl"
 

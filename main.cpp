@@ -1,19 +1,20 @@
-#include <iostream>
 #include "Buffer.h"
-#include "RLEEncoder.h"
-#include "FileWriter.h"
+#include "RLEHandler.h"
+#include "FileHandler.h"
 
-#include <fstream>
+
 
 int main() {
 
-    const Buffer<char> source("aaaabbbbcccdddee");
+    const Buffer<char> textBuffer("aaaaaaaaaabbbbbbbbbbbbbeeeeeeeeeeeedddddddddddddd");
 
-    Buffer<RLEPair> res(RLEEncoder::CalculateRLEBufferSize(source));
+    Buffer<RLEPair> encodedBuffer(RLEHandler::GetEncodedSize(textBuffer));
 
-    RLEEncoder::Encode(source, res);
+    RLEHandler::Encode(textBuffer, encodedBuffer);
 
-    FileWriter::WriteRLEFile(res, "out.rle");
+    FileHandler::WriteTXTFile("out.txt", textBuffer);
+    FileHandler::WriteRLEFile("out.rle", encodedBuffer);
+
 
     return 0;
 }

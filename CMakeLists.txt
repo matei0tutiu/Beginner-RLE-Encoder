@@ -8,12 +8,8 @@ add_executable(untitled main.cpp
         Buffer.h
         RLEPair.cpp
         RLEPair.h
-        RLEEncoder.cpp
-        RLEEncoder.h
-        RLEDecoder.cpp
-        RLEDecoder.h
-        FileWriter.cpp
-        FileWriter.h
-        FileReader.cpp
-        FileReader.h
+        FileHandler.cpp
+        FileHandler.h
+        RLEHandler.cpp
+        RLEHandler.h
 )
