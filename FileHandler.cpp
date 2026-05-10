@@ -14,21 +14,12 @@ void FileHandler::WriteRLEFile(const char *filePath, const Buffer<RLEPair> &buff
     std::ofstream outFile(filePath, std::ios::binary);
 
     for (size_t i = 0; i < buffer.Size(); ++i) {
-        outFile << buffer[i].count << buffer[i].character;
+        outFile << buffer[i].count << static_cast<char>(buffer[i].data);
     }
 
     outFile.close();
 }
 
-void FileHandler::WriteTXTFile(const char *filePath, const Buffer<char> &buffer) {
-    assert(buffer.Size() > 0 && "Source buffer is empty");
-
-    std::ofstream outFile(filePath, std::ios::binary);
-
-    outFile << buffer;
-
-    outFile.close();
-}
 
 void FileHandler::WriteBINFile(const char* filePath, const Buffer<std::byte>& buffer) {
     assert(buffer.Size() > 0 && "Source buffer is empty");
@@ -43,23 +34,6 @@ void FileHandler::WriteBINFile(const char* filePath, const Buffer<std::byte>& bu
 
 // Reading
 
-Buffer<char> FileHandler::ReadTXTFile(const char* filePath) {
-    std::ifstream inFile(filePath, std::ios::ate);
-
-    if (!inFile)
-        throw std::runtime_error("Failed to open file");
-
-    size_t fileSize = inFile.tellg();
-    inFile.seekg(0, std::ios::beg);
-
-    Buffer<char> buffer(fileSize);
-    inFile.read(&buffer[0], fileSize);
-
-    inFile.close();
-
-    return buffer;
-}
-
 Buffer<RLEPair> FileHandler::ReadRLEFile(const char* filePath) {
 
     std::ifstream inFile(filePath, std::ios::binary | std::ios::ate);
@@ -67,10 +41,8 @@ Buffer<RLEPair> FileHandler::ReadRLEFile(const char* filePath) {
     if (!inFile)
         throw std::runtime_error("Failed to open file");
 
-    size_t fileSize = inFile.tellg();
+    const size_t fileSize = inFile.tellg();
     inFile.seekg(0);
-
-
 
     if (fileSize % 2 != 0) {
         inFile.close();
@@ -92,7 +64,7 @@ Buffer<std::byte> FileHandler::ReadBINFile(const char* filePath) {
     if (!inFile)
         throw std::runtime_error("Failed to open file");
 
-    size_t fileSize = inFile.tellg();
+    const size_t fileSize = inFile.tellg();
     inFile.seekg(0, std::ios::beg);
 
     Buffer<std::byte> buffer(fileSize);

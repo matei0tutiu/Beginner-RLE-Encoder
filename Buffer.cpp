@@ -6,6 +6,7 @@
 
 #include "Buffer.h"
 
+
 Buffer<char>::Buffer(const char* string)  : BufferBase(std::strlen(string)) {
     for (size_t i = 0; i < _size; i++)
         _data[i] = string[i];

@@ -6,8 +6,9 @@
 #define UNTITLED_RLEPAIR_H
 
 
+#include <cstddef>
 #include <cstdint>
-#include "iostream"
+#include <iostream>
 
 struct RLEPair;
 
@@ -15,7 +16,7 @@ std::ostream& operator<<(std::ostream& os, const RLEPair& pair);
 
 struct RLEPair {
     uint8_t count;
-    char character;
+    std::byte data;
 
     friend std::ostream& operator<<(std::ostream& os, const RLEPair& pair);
 };

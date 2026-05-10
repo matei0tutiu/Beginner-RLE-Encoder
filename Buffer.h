@@ -6,7 +6,7 @@
 #define UNTITLED_BUFFER_H
 
 #include "RLEPair.h"
-#include <iosfwd>
+#include <iostream>
 
 template <typename T> class Buffer;
 template <typename T> class BufferBase;

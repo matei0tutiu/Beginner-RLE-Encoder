@@ -5,5 +5,5 @@
 #include "RLEPair.h"
 
 std::ostream& operator<<(std::ostream& os, const RLEPair& pair){
-    return os << "RLEPair<" << static_cast<int>(pair.count) << ',' << static_cast<int>(pair.character) << ">";
+    return os << "RLEPair<" << static_cast<int>(pair.count) << ',' << static_cast<int>(pair.data) << ">";
 }
