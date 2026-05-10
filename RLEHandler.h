@@ -15,14 +15,19 @@ public:
     ///@brief Encodes a buffer of characters to a buffer of RLE data
     ///@note The size of destination buffer must match exactly with the output of `GetEncodedSize()`
     static void Encode(const Buffer<char>& source, Buffer<RLEPair>& destination);
+    ///@brief Creates a new buffer with the encoded data from `source`
+    static Buffer<RLEPair> Encode(const Buffer<char>& source);
     ///@brief Calculates the size of a `Buffer<RLEPair>` required to encode the source buffer
     static size_t GetEncodedSize(const Buffer<char>& source);
 
     ///@brief Decodes a buffer from RLE data to a buffer of regular characters
     ///@note The size of the destination buffer must match exactly with the output of `GetDecodedSize()`
     static void Decode(const Buffer<RLEPair>& source, Buffer<char>& destination);
+    ///@brief Creates a new buffer with the decoded data from `source`
+    static Buffer<char> Decode(const Buffer<RLEPair>& source);
     ///@brief Calculates the size of a `Buffer<char>` required to decode the source buffer
     static size_t GetDecodedSize(const Buffer<RLEPair>& source);
+
 };
 
 

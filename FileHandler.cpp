@@ -25,13 +25,82 @@ void FileHandler::WriteTXTFile(const char *filePath, const Buffer<char> &buffer)
 
     std::ofstream outFile(filePath, std::ios::binary);
 
-    // ReSharper disable once CppUseAuto
-    char* result = new char[buffer.Size() + 1]();
+    outFile << buffer;
 
-    buffer.ToArray(result, buffer.Size() + 1);
-
-    outFile.write(result, buffer.Size());
-
-    delete[] result;
     outFile.close();
+}
+
+void FileHandler::WriteBINFile(const char* filePath, const Buffer<std::byte>& buffer) {
+    assert(buffer.Size() > 0 && "Source buffer is empty");
+
+    std::ofstream outFile(filePath, std::ios::binary);
+
+    for (size_t i = 0; i < buffer.Size(); i++)
+        outFile << static_cast<char>(buffer[i]);
+
+    outFile.close();
+}
+
+// Reading
+
+Buffer<char> FileHandler::ReadTXTFile(const char* filePath) {
+    std::ifstream inFile(filePath, std::ios::ate);
+
+    if (!inFile)
+        throw std::runtime_error("Failed to open file");
+
+    size_t fileSize = inFile.tellg();
+    inFile.seekg(0, std::ios::beg);
+
+    Buffer<char> buffer(fileSize);
+    inFile.read(&buffer[0], fileSize);
+
+    inFile.close();
+
+    return buffer;
+}
+
+Buffer<RLEPair> FileHandler::ReadRLEFile(const char* filePath) {
+
+    std::ifstream inFile(filePath, std::ios::binary | std::ios::ate);
+
+    if (!inFile)
+        throw std::runtime_error("Failed to open file");
+
+    size_t fileSize = inFile.tellg();
+    inFile.seekg(0);
+
+
+
+    if (fileSize % 2 != 0) {
+        inFile.close();
+        throw std::runtime_error("Invalid file: odd number of bytes");
+    }
+
+    Buffer<RLEPair> buffer(fileSize / 2);
+
+    inFile.read(reinterpret_cast<char*>(&buffer[0]), fileSize);
+
+    inFile.close();
+
+    return buffer;
+}
+
+Buffer<std::byte> FileHandler::ReadBINFile(const char* filePath) {
+    std::ifstream inFile(filePath, std::ios::ate | std::ios::binary);
+
+    if (!inFile)
+        throw std::runtime_error("Failed to open file");
+
+    size_t fileSize = inFile.tellg();
+    inFile.seekg(0, std::ios::beg);
+
+    Buffer<std::byte> buffer(fileSize);
+    char* bufferPtr = reinterpret_cast<char*>(&buffer[0]);
+    inFile.read(bufferPtr, fileSize);
+
+    inFile.close();
+
+    return buffer;
+
 }

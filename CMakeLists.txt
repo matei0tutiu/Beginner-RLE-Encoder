@@ -12,4 +12,5 @@ add_executable(untitled main.cpp
         FileHandler.h
         RLEHandler.cpp
         RLEHandler.h
+        Buffer.cpp
 )

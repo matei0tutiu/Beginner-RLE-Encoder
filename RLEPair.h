@@ -9,14 +9,15 @@
 #include <cstdint>
 #include "iostream"
 
+struct RLEPair;
+
+std::ostream& operator<<(std::ostream& os, const RLEPair& pair);
+
 struct RLEPair {
     uint8_t count;
     char character;
 
-    friend std::ostream& operator<<(std::ostream& os, const RLEPair& pair) {
-        return os << "RLEPair<" << pair.count << ',' << pair.character << ">";
-    }
-
+    friend std::ostream& operator<<(std::ostream& os, const RLEPair& pair);
 };
 
 

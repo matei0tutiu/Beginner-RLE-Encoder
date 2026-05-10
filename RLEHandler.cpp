@@ -11,7 +11,7 @@ size_t RLEHandler::GetEncodedSize(const Buffer<char>& source) {
     // check one-by-one for runs and add up the numbers of runs
 
     RLEPair currentRun = {1, source[0]};
-    size_t result = 0;
+    size_t result = 1;
 
     for (size_t i = 1; i < source.Size();i++)
         if (source[i] != currentRun.character || currentRun.count >= 250) {
@@ -25,24 +25,28 @@ size_t RLEHandler::GetEncodedSize(const Buffer<char>& source) {
 }
 
 void RLEHandler::Encode(const Buffer<char>& source, Buffer<RLEPair>& destination) {
-    assert(source.Size() == 0 || "Error: Trying to encode a null-length buffer");
-    assert(destination.Size() != GetEncodedSize(source) || "Error: Destination buffer is not the proper size for encoding");
+    assert(source.Size() != 0 && "Error: Trying to encode a null-length buffer");
+    assert(destination.Size() == GetEncodedSize(source) && "Error: Destination buffer is not the proper size for encoding");
 
-    RLEPair currentRun = {1, source[0]};
     size_t destinationIndex = 0;
+    destination[0] = {1, source[0]};
 
     for (size_t i = 1; i < source.Size(); i++)
         // check if the current character matches with the run and if the count didn't overflow
-        if (source[i] != currentRun.character || currentRun.count >= 250)  {
+        if (source[i] != destination[destinationIndex].character || destination[destinationIndex].count >= 250)  {
             // we need save the current run and start a new one
-
-            destination[destinationIndex] = currentRun;
             destinationIndex++;
 
-            currentRun.character = source[i];
-            currentRun.count = 1;
+            destination[destinationIndex] = {1, source[i]};
         }else // we increase the counter of the current run
-            currentRun.count++;
+            destination[destinationIndex].count++;
+}
+
+Buffer<RLEPair> RLEHandler::Encode(const Buffer<char>& source) {
+
+    Buffer<RLEPair> result(GetEncodedSize(source));
+    Encode(source, result);
+    return result;
 }
 
 size_t RLEHandler::GetDecodedSize(const Buffer<RLEPair>& source) {
@@ -58,12 +62,18 @@ size_t RLEHandler::GetDecodedSize(const Buffer<RLEPair>& source) {
 }
 
 void RLEHandler::Decode(const Buffer<RLEPair>& source, Buffer<char>& destination) {
-    assert(source.Size() != 0 || "Error: Trying to decode a null-length buffer");
-    assert(destination.Size() == GetDecodedSize(source) || "Error: Destination buffer is not the proper size for decoding");
+    assert(source.Size() != 0 && "Error: Trying to decode a null-length buffer");
+    assert(destination.Size() == GetDecodedSize(source) && "Error: Destination buffer is not the proper size for decoding");
 
     size_t destinationIndex = 0;
 
     for (int i = 0; i < source.Size(); i++)
         for (int j = 0; j < source[i].count; j++)
             destination[destinationIndex++] = source[i].character;
+}
+
+Buffer<char> RLEHandler::Decode(const Buffer<RLEPair>& source) {
+    Buffer<char> result(GetDecodedSize(source));
+    Decode(source, result);
+    return result;
 }

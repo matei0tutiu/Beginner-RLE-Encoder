@@ -101,26 +101,16 @@ std::ostream& operator<<(std::ostream& os, const BufferBase<T>& buffer)    {
     return os;
 }
 
-// Specialization
+template <typename T>
+Buffer<T> BufferBase<T>::Range(const size_t start, const size_t end) const {
+    assert(start < end && "The end index must be strictly greater then the start index");
+    assert(end <= this->_size && "Cannot copy outside the buffer");
 
-inline Buffer<char>::Buffer(const char* string)  : BufferBase(std::strlen(string)) {
-    for (size_t i = 0; i < _size; i++)
-        _data[i] = string[i];
+    Buffer<T> result(end - start);
+
+    for (size_t i = 0; i < result.Size(); i++)
+        result[i] = this->_data[start + i];
+
+    return result;
 }
 
-inline void Buffer<char>::ToArray(char* out, const size_t outSize) const {
-    assert(_size + 1 == outSize && "Array size mismatch");
-
-    for (size_t i = 0; i < _size; i++)
-        out[i] = _data[i];
-
-    out[_size] = '\0';
-}
-
-inline std::ostream& operator<<(std::ostream& os, const Buffer<char>& buffer) {
-
-    for (size_t i = 0; i < buffer.Size();i++)
-        os << buffer._data[i];
-
-    return os;
-}
