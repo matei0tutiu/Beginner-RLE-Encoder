@@ -8,9 +8,9 @@
 #include "RLEPair.h"
 
 
-class RLEHandler {
+class RLE {
 public:
-    RLEHandler() = delete;
+    RLE() = delete;
 
     ///@brief Encodes data to a buffer of RLE data
     ///@note The size of destination buffer must match exactly with the output of `GetEncodedSize()`

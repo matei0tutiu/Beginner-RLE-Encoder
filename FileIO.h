@@ -9,10 +9,10 @@
 #include "RLEPair.h"
 
 
-class FileHandler {
+class FileIO {
 
 public:
-    FileHandler() = delete;
+    FileIO() = delete;
 
     ///@brief Used to read a `.rle` file
     ///@exception Incorrect_File If the file is not correct ( it does not have an even number of bytes ) it throws a `runtime_error`

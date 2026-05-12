@@ -2,12 +2,12 @@
 // Created by Matei on 5/9/2026.
 //
 
-#include "RLEHandler.h"
+#include "RLE.h"
 #include <cassert>
 
 #define MAX_RUN_COUNT 254
 
-size_t RLEHandler::GetEncodedSize(const Buffer<std::byte>& source) {
+size_t RLE::GetEncodedSize(const Buffer<std::byte>& source) {
     if (source.Size() == 0) return 0;
 
     // check one-by-one for runs and add up the numbers of runs
@@ -27,7 +27,7 @@ size_t RLEHandler::GetEncodedSize(const Buffer<std::byte>& source) {
     return result;
 }
 
-void RLEHandler::Encode(const Buffer<std::byte>& source, Buffer<RLEPair>& destination) {
+void RLE::Encode(const Buffer<std::byte>& source, Buffer<RLEPair>& destination) {
     assert(source.Size() != 0 && "Error: Trying to encode a null-length buffer");
     assert(destination.Size() == GetEncodedSize(source) && "Error: Destination buffer is not the proper size for encoding");
 
@@ -45,14 +45,14 @@ void RLEHandler::Encode(const Buffer<std::byte>& source, Buffer<RLEPair>& destin
             destination[destinationIndex].count++;
 }
 
-Buffer<RLEPair> RLEHandler::Encode(const Buffer<std::byte>& source) {
+Buffer<RLEPair> RLE::Encode(const Buffer<std::byte>& source) {
 
     Buffer<RLEPair> result(GetEncodedSize(source));
     Encode(source, result);
     return result;
 }
 
-size_t RLEHandler::GetDecodedSize(const Buffer<RLEPair>& source) {
+size_t RLE::GetDecodedSize(const Buffer<RLEPair>& source) {
     if (source.Size() == 0) return 0;
 
     // loop over all the pairs and add up the counts
@@ -64,7 +64,7 @@ size_t RLEHandler::GetDecodedSize(const Buffer<RLEPair>& source) {
     return result;
 }
 
-void RLEHandler::Decode(const Buffer<RLEPair>& source, Buffer<std::byte>& destination) {
+void RLE::Decode(const Buffer<RLEPair>& source, Buffer<std::byte>& destination) {
     assert(source.Size() != 0 && "Error: Trying to decode a null-length buffer");
     assert(destination.Size() == GetDecodedSize(source) && "Error: Destination buffer is not the proper size for decoding");
 
@@ -75,7 +75,7 @@ void RLEHandler::Decode(const Buffer<RLEPair>& source, Buffer<std::byte>& destin
             destination[destinationIndex++] = source[i].data;
 }
 
-Buffer<std::byte> RLEHandler::Decode(const Buffer<RLEPair>& source) {
+Buffer<std::byte> RLE::Decode(const Buffer<RLEPair>& source) {
     Buffer<std::byte> result(GetDecodedSize(source));
     Decode(source, result);
     return result;
